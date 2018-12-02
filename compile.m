@@ -1,13 +1,18 @@
 if ismac
     mex movsae2.cpp -I/opt/local/include/ -L/opt/local/lib -lfftw3f -lfftw3f_threads -lut
 elseif isunix
-    mex movsae2.cpp -I/usr/include/ -L/usr/lib -lfftw3f -lfftw3f_threads -lut
+    mex movsae2.cpp -I/usr/include/ -L/usr/lib -lfftw3f -lfftw3f_threads -lut -fopenmp
 elseif ispc
-    if(exist(fftw3')==0)
+    if(exist('fftw3')==0)
         mget(ftp('ftp.fftw.org'),'/pub/fftw/fftw-3.3.5-dll64.zip');
         unzip('pub/fftw/fftw-3.3.5-dll64.zip','fftw3');
+        system(strcat(matlabshared.supportpkg.getSupportPackageRoot,'\3P.instrset\mingw_w64.instrset\bin\dlltool.exe -d fftw3/libfftw3f-3.def -l fftw3/libfftw3f-3.lib'))
+        system(strcat(matlabshared.supportpkg.getSupportPackageRoot,'\3P.instrset\mingw_w64.instrset\bin\dlltool.exe -d fftw3/libfftw3-3.def -l fftw3/libfftw3-3.lib'))
     end 
-    mex('movsae2.cpp','-Iffw3','-Lffw3','-lfftw3f-3','-lut');
+    mex('movsae2.cpp','-Ifftw3','-Lfftw3','-lfftw3f-3.lib',strcat("-L",matlabroot,"\extern\lib\win64\mingw64"),'-lut');
+    copyfile fftw3\libfftw3f-3.dll .
+    rmdir pub s
+    rmdir fftw3 s
 else
     disp('Platform not supported')
 end
