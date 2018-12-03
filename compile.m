@@ -9,7 +9,7 @@ elseif ispc
         system(strcat(matlabshared.supportpkg.getSupportPackageRoot,'\3P.instrset\mingw_w64.instrset\bin\dlltool.exe -d fftw3/libfftw3f-3.def -l fftw3/libfftw3f-3.lib'))
         system(strcat(matlabshared.supportpkg.getSupportPackageRoot,'\3P.instrset\mingw_w64.instrset\bin\dlltool.exe -d fftw3/libfftw3-3.def -l fftw3/libfftw3-3.lib'))
     end 
-    mex('movsae2.cpp','-Ifftw3','-Lfftw3','-lfftw3f-3.lib',strcat("-L",matlabroot,"\extern\lib\win64\mingw64"),'-lut');
+    mex('movsae2.cpp','-Ifftw3','-Lfftw3','-lfftw3f-3.lib',strcat('-L',matlabroot,'\extern\lib\win64\mingw64'),'-lut',['COMPFLAGS="$COMPFLAGS -fopenmp']);
     copyfile fftw3\libfftw3f-3.dll .
     rmdir pub s
     rmdir fftw3 s
