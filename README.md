@@ -15,6 +15,12 @@ and return for each pixel:
 1. the lag with the lowest error
 2. the lowest error
 
-usage in MATLAB:
+### Usage in MATLAB:
 
 `[lagIndex,quality]=movsae2(kernel,ref,shiftedImage,lagVector);`
+
+### Installation
+
+0. test with `mex -setup c++` that the mingw-w64 compiler is installed, in other cases install it from [here](https://www.mathworks.com/matlabcentral/fileexchange/52848-matlab-support-for-mingw-w64-c-c-compiler)
+1. run `compile`
+2. run `test` (to test if it works! )
