@@ -1,9 +1,9 @@
 # MatchingMapMaker
 
-The MatchingMapMaker (M<sup>3</sup>) is used to detect shifts between two images using convolutions.
+The MatchingMapMaker (M<sup>3</sup>) is a MATLAB function used to detect shifts between two images using convolutions.
 The function will operate a weighted sum of absolute errors for each lag vector given as input.
 
-The main code is written 
+The main code is written in C/C++, but the code is interfaced to MATLAB using mex.
 
 The function **movsae2** use 4 parameters:
 1. an odd size kernel, which can be full of one to compute the Sum of absolute error, or a normalized version to have the mean
