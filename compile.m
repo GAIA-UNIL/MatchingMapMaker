@@ -6,8 +6,9 @@ elseif ispc
     if(exist('fftw3')==0)
         mget(ftp('ftp.fftw.org'),'/pub/fftw/fftw-3.3.5-dll64.zip');
         unzip('pub/fftw/fftw-3.3.5-dll64.zip','fftw3');
-        system(strcat(matlabshared.supportpkg.getSupportPackageRoot,'\3P.instrset\mingw_w64.instrset\bin\dlltool.exe -d fftw3/libfftw3f-3.def -l fftw3/libfftw3f-3.lib'))
-        system(strcat(matlabshared.supportpkg.getSupportPackageRoot,'\3P.instrset\mingw_w64.instrset\bin\dlltool.exe -d fftw3/libfftw3-3.def -l fftw3/libfftw3-3.lib'))
+        compilerPath=mex.getCompilerConfigurations('C++','Selected').Location;
+        system(strcat(compilerPath,'\bin\dlltool.exe -d fftw3/libfftw3f-3.def -l fftw3/libfftw3f-3.lib'))
+        system(strcat(compilerPath,'\bin\dlltool.exe -d fftw3/libfftw3-3.def -l fftw3/libfftw3-3.lib'))
     end 
     mex('movsae2.cpp','-Ifftw3','-Lfftw3','-lfftw3f-3.lib',strcat('-L',matlabroot,'\extern\lib\win64\mingw64'),'-lut',['COMPFLAGS="$COMPFLAGS -fopenmp']);
     copyfile fftw3\libfftw3f-3.dll .
