@@ -5,7 +5,7 @@ The function will operate a weighted sum of absolute errors for each lag vector 
 
 The main code is written in C/C++, but the code is interfaced to MATLAB using mex.
 
-The function **movsae2** use 4 parameters:
+The function **mmm** use 4 parameters:
 1. an odd size kernel, which can be full of one to compute the Sum of absolute error, or a normalized version to have the mean
 2. reference image
 3. compared image
@@ -17,7 +17,7 @@ and return for each pixel:
 
 ### Usage in MATLAB:
 
-`[lagIndex,quality]=movsae2(kernel,ref,shiftedImage,lagVector);`
+`[lagIndex,quality]=mmm(kernel,ref,shiftedImage,lagVector,'Algo');`
 
 ### Installation
 

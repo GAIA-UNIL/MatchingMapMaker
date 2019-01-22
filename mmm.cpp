@@ -238,12 +238,12 @@ void mexFunctionWork(int nlhs, mxArray *plhs[],
 
 	fftwf_init_threads();
 	#if _OPENMP
-	fftw_plan_with_nthreads(omp_get_max_threads());
+	fftwf_plan_with_nthreads(omp_get_max_threads());
 	#endif
 	fftwf_plan forwardPlan=fftwf_plan_dft_r2c_2d(n,m,tmp1,(fftwf_complex*)tmp2,FFTW_ESTIMATE);
 
 	#if _OPENMP
-	fftw_plan_with_nthreads(omp_get_max_threads());
+	fftwf_plan_with_nthreads(omp_get_max_threads());
 	#endif
 	fftwf_plan backwardPlan=fftwf_plan_dft_c2r_2d(n,m,(fftwf_complex*)tmp1,tmp2,FFTW_ESTIMATE);
 	

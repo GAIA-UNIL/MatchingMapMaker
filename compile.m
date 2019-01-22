@@ -1,7 +1,7 @@
 if ismac
     mex mmm.cpp -I/opt/local/include/ -L/opt/local/lib -lfftw3f -lfftw3f_threads -lut
 elseif isunix
-    mex mmm.cpp -I/usr/include/ -L/usr/lib -lfftw3f -lfftw3f_threads -lut -fopenmp
+    mex mmm.cpp -I/usr/include/ -L/usr/lib -lfftw3f -lfftw3f_threads -lut CXXFLAGS="$CXXFLAGS -fopenmp" LDFLAGS="$LDFLAGS -fopenmp"
 elseif ispc
     if(exist('fftw3')==0)
         mget(ftp('ftp.fftw.org'),'/pub/fftw/fftw-3.3.5-dll64.zip');
