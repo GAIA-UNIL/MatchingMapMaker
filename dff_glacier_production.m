@@ -78,7 +78,7 @@ possibleVector=cat(2,a(:)+minX,b(:)+minY);
 possibleVector=possibleVector(randperm(size(possibleVector,1)),:);
 
 tic;
-[lagIndex,quality]=movsae2(single(pattern),aoi1f,aoi2f,int32(possibleVector));
+[lagIndex,quality]=mmm(single(pattern),aoi1f,aoi2f,int32(possibleVector),'SAE');
 toc
 
 save(strcat(im1Date,'-',im2Date,'-',int2str(patternSize),'.mat'),'-v7.3')
