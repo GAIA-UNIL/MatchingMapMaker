@@ -204,10 +204,28 @@ void mexFunctionWork(int nlhs, mxArray *plhs[],
 	//printf("init memory allocation \n ");
 	mexEvalString("drawnow");
 
-	#pragma omp parallel for simd default(none) firstprivate(tmp1,m,n)
+	#pragma omp parallel for simd default(none) firstprivate(tmp1,tmp2,m,n)
 	for (int i = 0; i < 2*(m/2+1)*n; ++i)
 	{
 		tmp1[i]=0;
+		tmp2[i]=0;
+	}
+
+	if(needNormalized || needDeviation){
+		#pragma omp parallel for simd default(none) firstprivate(im1Mean,im2Mean,m,n)
+		for (int i = 0; i < 2*(m/2+1)*n; ++i)
+		{
+			im1Mean[i]=0;
+			im2Mean[i]=0;
+		}
+	}
+	if(needDeviation){
+		#pragma omp parallel for simd default(none) firstprivate(stdDev1,stdDev2,m,n)
+		for (int i = 0; i < 2*(m/2+1)*n; ++i)
+		{
+			stdDev1[i]=0;
+			stdDev2[i]=0;
+		}
 	}
 
 	float sumKernel=1.0f;
@@ -291,8 +309,10 @@ void mexFunctionWork(int nlhs, mxArray *plhs[],
 		#pragma omp parallel for simd default(none) firstprivate(stdDev1,stdDev2,im1Mean,im2Mean,m,n)
 		for (int i = 0; i < m*n; ++i)
 		{	
-			stdDev1[i]=sqrt(stdDev1[i]/(m*n)-sqr(im1Mean[i]));
-			stdDev2[i]=sqrt(stdDev2[i]/(m*n)-sqr(im2Mean[i]));	
+			//if(i<10000)printf("1: %f, %f %f, %f\n",stdDev1[i],im1Mean[i] ,stdDev1[i]/(m*n)-sqr(im1Mean[i]) ,sqrt(stdDev1[i]/(m*n)-sqr(im1Mean[i])));
+			//if(i<10000)printf("2: %f, %f %f, %f\n",stdDev2[i],im2Mean[i] ,stdDev2[i]/(m*n)-sqr(im2Mean[i]) ,sqrt(stdDev2[i]/(m*n)-sqr(im2Mean[i])));
+			stdDev1[i]=sqrt(std::max(0.f,stdDev1[i]/(m*n)-sqr(im1Mean[i])));
+			stdDev2[i]=sqrt(std::max(0.f,stdDev2[i]/(m*n)-sqr(im2Mean[i])));	
 		}
 	}
 
@@ -336,6 +356,7 @@ void mexFunctionWork(int nlhs, mxArray *plhs[],
 			}
 			break;
 			case CC:
+			case NCC:
 			#pragma omp parallel for simd firstprivate(im1Ptr,im2Ptr,tmp1,absolutLag,sizePattern,offsetPX,offsetPY,kernel,m)
 			for (int index = 0; index < m*n; ++index)
 			{
@@ -356,13 +377,6 @@ void mexFunctionWork(int nlhs, mxArray *plhs[],
 				tmp1[index]=sqr((im1Ptr[index]-im1Mean[index])-(im2Ptr[(index+absolutLag)%(m*n)]-im2Mean[(index+absolutLag)%(m*n)]));
 			}
 			break;
-			case NCC:
-			#pragma omp parallel for simd firstprivate(im1Ptr,im2Ptr,tmp1,absolutLag,sizePattern,offsetPX,offsetPY,kernel,m)
-			for (int index = 0; index < m*n; ++index)
-			{
-				tmp1[index]=(im1Ptr[index])*(im2Ptr[(index+absolutLag)%(m*n)]);
-			}
-			break;
 		}
 
 		fftwf_execute(forwardPlan);
@@ -381,6 +395,8 @@ void mexFunctionWork(int nlhs, mxArray *plhs[],
 		if(mode==NCC){
 			for (int i = 0; i < m*n; ++i)
 			{
+				//if(i<100)
+					//printf("%f, %f %f, %f %f\n",tmp2[i],im1Mean[i] ,im2Mean[i] ,stdDev1[i], stdDev2[i] );
 				tmp2[i]=(tmp2[i]/(n*m)-im1Mean[i]*im2Mean[i])/(stdDev1[i]*stdDev2[i]);
 			}
 		}
