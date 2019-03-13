@@ -1,0 +1,3 @@
+[submodule "MatchingMapMaker_tests"]
+	path = MatchingMapMaker_tests
+	url = https://github.com/GAIA-UNIL/MatchingMapMaker_tests.git
